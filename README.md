@@ -59,7 +59,7 @@ La app es una calculadora web: uno mete dos números, escoge la operación (suma
 ### 4. ¿Qué problemas tuvimos y cómo los resolvimos?
 
 - **Jennifer Andrea Lopez Gomez:** Al principio SonarCloud no encontraba el proyecto porque el `projectKey` y la organización no coincidían con los de la cuenta. Tocó revisarlos en SonarCloud y corregirlos en `sonar-project.properties`. También aprendí que el check `build-and-test` no sale en la regla de la rama hasta que el workflow corre una vez.
-- **Santiago Alexander cardenas Laverde:** Las pruebas de Selenium pasaban en local pero en el pipeline se caían casi todas. Era que Gunicorn prende 4 workers y cada uno tenía su propia clave, entonces el formulario de uno no le servía al otro. Con `--preload` quedó una sola clave para todos. Y aprendí que uno no puede aprobar su propio PR.
+- **Santiago Alexander cardenas Laverde:** Cuando abrí el PR con las pruebas nuevas no me dejaba hacer merge y tampoco podía aprobarlo yo mismo. Ahí entendí que GitHub no deja que uno se apruebe su propio PR, por la regla de la rama. Les pedí a Danna y a Samuel que lo revisaran, lo aprobaron y ya se pudo integrar.
 - **Danna Salazar Cardenas:** El paso de SonarCloud fallaba con un error de que el análisis automático estaba prendido. Es que Sonar no deja tener el automático y el del pipeline al mismo tiempo. Lo apagamos en la configuración del proyecto y ahí sí pasó.
 - **Samuel Cadavid Zapata:** Sonar nos sacó issues de seguridad porque las librerías no estaban bloqueadas con hash. Generamos los `requirements` con hashes usando `uv` y se instalan con `--require-hashes`. En el camino un `:` mal puesto en el YAML dañó el workflow, y lo arreglamos dejando el comando en bloque con `|`.
 
