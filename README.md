@@ -27,10 +27,10 @@ Los nombres están en el mismo orden que la variable `AUTOR` de `app/calculadora
 
 ### 1. ¿Qué ventajas tiene usar un pipeline de CI?
 
-- **Los errores salen rapidito.** Cada vez que alguien sube algo, las pruebas corren solas. Si uno daña algo se entera ahí mismo y sabe qué cambio fue, no una semana después. Nos pasó con el error de `restar`: el pipeline lo atajó antes de que llegara a `main`.
+- **Los errores salen rapido.** Cada vez que alguien sube algo, las pruebas corren solas. Si uno daña algo se entera ahí mismo y sabe qué cambio fue, no una semana después. Nos pasó con el error de `restar`: el pipeline lo atajó antes de que llegara a `main`.
 - **Todos jugamos con las mismas reglas.** Black, los linters, la cobertura mínima del 80 % y SonarCloud revisan igual el código de todos, entonces no depende de que a alguien se le olvide correr las pruebas.
 - **`main` siempre sirve.** Con la rama protegida solo entra código que pasó todo, entonces la imagen que queda en Docker Hub es una versión probada.
-- **Se acabó el "en mi pc sí funciona".** Todo corre en una máquina limpia con las mismas versiones de las librerías, y queda el historial de cada ejecución con sus reportes.
+- **Se acabó para nosotros el "en mi pc sí funciona".** Todo corre en una máquina limpia con las mismas versiones de las librerías, y queda el historial de cada ejecución con sus reportes.
 
 ### 2. ¿Cuál es la diferencia entre una prueba unitaria, una de componente y una de aceptación?
 
@@ -58,14 +58,10 @@ La app es una calculadora web: uno mete dos números, escoge la operación (suma
 
 ### 4. ¿Qué problemas tuvimos y cómo los resolvimos?
 
-- **Santiago Alexander cardenas Laverde:**
-  - Las pruebas de Selenium pasaban en local pero en el pipeline fallaban casi todas. Resulta que Gunicorn prende 4 workers y cada uno se inventaba su propia clave secreta, entonces el token del formulario que daba uno no le servía al otro. Lo arreglamos con `--preload` para que todos usen la misma.
-  - SonarCloud fallaba porque tenía prendido el análisis automático y a la vez lo estábamos corriendo desde el pipeline. Tocó apagar el automático en la configuración del proyecto.
-  - Sonar marcaba issues de seguridad porque las librerías no estaban bien bloqueadas. Generamos los `requirements` con hashes usando `uv` y ahora se instalan con `--require-hashes`.
-  - Aprendí que en GitHub uno no puede aprobar su propio PR, toca que lo apruebe otro del equipo.
-- **Jennifer Andrea Lopez Gomez:** _(por completar)_
-- **Danna Salazar Cardenas:** _(por completar)_
-- **Samuel Cadavid Zapata:** _(por completar)_
+- **Jennifer Andrea Lopez Gomez:** Al principio SonarCloud no encontraba el proyecto porque el `projectKey` y la organización no coincidían con los de la cuenta. Tocó revisarlos en SonarCloud y corregirlos en `sonar-project.properties`. También aprendí que el check `build-and-test` no sale en la regla de la rama hasta que el workflow corre una vez.
+- **Santiago Alexander cardenas Laverde:** Las pruebas de Selenium pasaban en local pero en el pipeline se caían casi todas. Era que Gunicorn prende 4 workers y cada uno tenía su propia clave, entonces el formulario de uno no le servía al otro. Con `--preload` quedó una sola clave para todos. Y aprendí que uno no puede aprobar su propio PR.
+- **Danna Salazar Cardenas:** El paso de SonarCloud fallaba con un error de que el análisis automático estaba prendido. Es que Sonar no deja tener el automático y el del pipeline al mismo tiempo. Lo apagamos en la configuración del proyecto y ahí sí pasó.
+- **Samuel Cadavid Zapata:** Sonar nos sacó issues de seguridad porque las librerías no estaban bloqueadas con hash. Generamos los `requirements` con hashes usando `uv` y se instalan con `--require-hashes`. En el camino un `:` mal puesto en el YAML dañó el workflow, y lo arreglamos dejando el comando en bloque con `|`.
 
 ### 5. ¿Por qué construir la imagen, probarla y publicar esa misma, y no solo probar el código?
 
