@@ -10,7 +10,8 @@ COPY requirements.txt .
 
 # Instala solo las dependencias de ejecución (Flask y Gunicorn)
 # Usa --no-cache-dir para reducir el tamaño de la imagen
-RUN pip install --no-cache-dir --only-binary=:all: -r requirements.txt
+# --require-hashes verifica cada paquete contra el hash fijado en requirements.txt
+RUN pip install --no-cache-dir --only-binary=:all: --require-hashes -r requirements.txt
 
 RUN useradd --create-home appuser
 USER appuser
