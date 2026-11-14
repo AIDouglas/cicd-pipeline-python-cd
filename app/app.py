@@ -1,9 +1,15 @@
 """Aplicación web de la calculadora."""
 
+import os
+import secrets
+
 from flask import Flask, render_template, request
+from flask_wtf.csrf import CSRFProtect
 from .calculadora import sumar, restar, multiplicar, dividir
 
 app = Flask(__name__)
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY") or secrets.token_hex(32)
+csrf = CSRFProtect(app)
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -35,4 +41,4 @@ def index():
 
 
 if __name__ == "__main__":  # pragma: no cover
-    app.run(debug=True, port=5000, host="0.0.0.0")  # Quita debug=True para producción
+    app.run(debug=False, port=5000, host="127.0.0.1")

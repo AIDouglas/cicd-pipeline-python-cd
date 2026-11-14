@@ -10,7 +10,10 @@ COPY requirements.txt .
 
 # Instala solo las dependencias de ejecución (Flask y Gunicorn)
 # Usa --no-cache-dir para reducir el tamaño de la imagen
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --only-binary=:all: -r requirements.txt
+
+RUN useradd --create-home appuser
+USER appuser
 
 # Copia el código de la aplicación (solo la carpeta app)
 COPY app/ ./app/
