@@ -26,4 +26,6 @@ EXPOSE 8000
 # 'app.app:app' significa: del archivo app.py dentro del paquete app, usa la instancia 'app' de Flask.
 # 'workers=4' es un ejemplo, ajusta según sea necesario.
 # 'bind 0.0.0.0:8000' hace que Gunicorn escuche en todas las interfaces de red en el puerto 8000.
-CMD ["gunicorn", "--workers=4", "--bind=0.0.0.0:8000", "app.app:app"]
+# --preload carga la app una sola vez antes de crear los workers, así todos
+# comparten el mismo SECRET_KEY y el token CSRF es válido en cualquier worker.
+CMD ["gunicorn", "--preload", "--workers=4", "--bind=0.0.0.0:8000", "app.app:app"]
